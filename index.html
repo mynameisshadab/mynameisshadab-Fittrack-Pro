@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="FitTrack Pro"/>
+<meta name="theme-color" content="#0f172a"/>
+<title>FitTrack Pro</title>
+<link rel="manifest" id="manifestLink"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#334155;
+  --card:rgba(255,255,255,0.04);--card-border:rgba(255,255,255,0.08);
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#475569;
+  --accent:#10b981;--accent2:#059669;--accent-bg:rgba(16,185,129,0.12);--accent-border:rgba(16,185,129,0.3);
+  --danger:#f97316;--warn:#f59e0b;--good:#22c55e;
+  --shadow:rgba(0,0,0,0.4);
+  --radius:16px;--radius-sm:10px;--radius-xs:8px;
+}
+[data-theme="light"]{
+  --bg:#f0fdf4;--bg2:#ffffff;--bg3:#e2e8f0;
+  --card:rgba(255,255,255,0.9);--card-border:rgba(0,0,0,0.08);
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --accent:#059669;--accent2:#047857;--accent-bg:rgba(5,150,105,0.1);--accent-border:rgba(5,150,105,0.3);
+  --shadow:rgba(0,0,0,0.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;max-width:430px;margin:0 auto;
+  padding-bottom:100px;transition:background .3s,color .3s;
+}
+h1,h2,h3,.brand{font-family:'Syne',sans-serif;}
+button{font-family:'DM Sans',sans-serif;cursor:pointer;}
+input,select,textarea{font-family:'DM Sans',sans-serif;}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
+
+/* ===== ONBOARDING ===== */
+#onboarding{background:var(--bg);padding:0;}
+.ob-step{display:none;padding:28px 20px;animation:fadeUp .3s ease;}
+.ob-step.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.ob-header{margin-bottom:28px;}
+.ob-step-indicator{display:flex;gap:6px;margin-bottom:20px;}
+.ob-dot{height:4px;border-radius:2px;background:var(--bg3);flex:1;transition:background .3s;}
+.ob-dot.done{background:var(--accent);}
+.ob-emoji{font-size:40px;margin-bottom:12px;}
+.ob-title{font-size:24px;font-weight:800;color:var(--text);line-height:1.2;}
+.ob-sub{font-size:14px;color:var(--text2);margin-top:6px;}
+.field-group{margin-bottom:16px;}
+.field-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.field-input{
+  width:100%;background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);padding:13px 14px;color:var(--text);font-size:15px;outline:none;
+  transition:border-color .2s;
+}
+.field-input:focus{border-color:var(--accent);}
+.field-select{
+  width:100%;background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);padding:13px 14px;color:var(--text);font-size:15px;outline:none;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;
+}
+.field-select option{background:var(--bg2);color:var(--text);}
+.chip-group{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{
+  padding:8px 14px;border-radius:999px;
+  background:var(--card);border:1px solid var(--card-border);
+  font-size:13px;color:var(--text2);font-weight:600;transition:all .2s;
+}
+.chip.selected{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
+.ob-nav{display:flex;gap:10px;margin-top:24px;}
+.btn-back{flex:0 0 auto;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:14px 18px;color:var(--text2);font-size:14px;font-weight:700;}
+.btn-next{flex:1;background:var(--accent);border:none;border-radius:var(--radius-sm);padding:14px;color:#fff;font-size:15px;font-weight:800;letter-spacing:.3px;}
+.btn-next:disabled{background:var(--bg3);color:var(--text3);}
+.time-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.goal-card{
+  background:var(--card);border:1.5px solid var(--card-border);
+  border-radius:var(--radius);padding:16px;text-align:center;
+  transition:all .2s;
+}
+.goal-card.selected{background:var(--accent-bg);border-color:var(--accent);}
+.goal-card .goal-icon{font-size:28px;margin-bottom:8px;}
+.goal-card .goal-title{font-size:13px;font-weight:700;color:var(--text);}
+.goal-card .goal-sub{font-size:11px;color:var(--text2);margin-top:3px;}
+.goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ===== MAIN APP ===== */
+#app{background:var(--bg);}
+#appHeader{
+  padding:28px 20px 0;
+  background:linear-gradient(180deg,var(--accent-bg) 0%,transparent 100%);
+  border-bottom:1px solid var(--card-border);
+}
+.app-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.app-brand{font-size:11px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;font-weight:700;}
+.app-user{font-size:18px;font-weight:800;}
+.header-actions{display:flex;gap:8px;align-items:center;}
+.icon-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--card);border:1px solid var(--card-border);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.streak-pill{
+  background:var(--accent-bg);border:1px solid var(--accent-border);
+  border-radius:999px;padding:5px 12px;
+  display:flex;align-items:center;gap:6px;
+}
+.streak-num{font-size:16px;font-weight:800;color:var(--accent);}
+.streak-lbl{font-size:10px;color:var(--text3);letter-spacing:.5px;}
+
+.day-row{display:flex;gap:6px;padding:16px 20px 14px;overflow-x:auto;scrollbar-width:none;}
+.day-row::-webkit-scrollbar{display:none;}
+.day-pill{
+  flex:0 0 auto;background:var(--card);border:1px solid transparent;
+  border-radius:var(--radius-sm);padding:7px 10px;min-width:44px;text-align:center;transition:all .2s;
+}
+.day-pill.today{border-color:var(--accent-border);background:var(--accent-bg);}
+.day-pill.active{background:var(--accent);border-color:var(--accent);}
+.dp-name{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--text3);}
+.dp-pct{font-size:12px;font-weight:800;color:var(--text3);margin-top:2px;}
+.day-pill.has-data .dp-pct{color:var(--accent);}
+.day-pill.active .dp-name,.day-pill.active .dp-pct{color:#fff;}
+
+#appNav{display:flex;border-bottom:1px solid var(--card-border);background:var(--bg2);}
+.nav-btn{flex:1;padding:11px 0;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-size:11px;font-weight:700;letter-spacing:.3px;transition:all .2s;}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.view{display:none;padding:16px 16px 0;animation:fadeUp .25s ease;}
+.view.active{display:block;}
+
+/* SCORE */
+.score-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+.ring-wrap{position:relative;width:90px;height:90px;flex-shrink:0;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-pct{font-size:19px;font-weight:900;color:var(--accent);font-family:'Syne',sans-serif;}
+.ring-sub{font-size:9px;color:var(--text3);letter-spacing:.5px;}
+.day-label{font-size:17px;font-weight:800;font-family:'Syne',sans-serif;}
+.day-pts{font-size:12px;color:var(--text2);margin-top:3px;}
+.grade-badge{display:inline-block;margin-top:8px;border-radius:var(--radius-xs);padding:4px 10px;font-size:11px;font-weight:700;}
+
+/* HABITS */
+.habits{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.habit-card{
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:13px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .2s;width:100%;text-align:left;
+}
+.habit-card.done{background:var(--accent-bg);border-color:var(--accent-border);}
+.habit-left{display:flex;align-items:flex-start;gap:12px;flex:1;}
+.habit-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.habit-info{flex:1;}
+.habit-name{font-size:13px;font-weight:700;color:var(--text2);}
+.habit-card.done .habit-name{color:var(--text);}
+.habit-time{font-size:11px;color:var(--accent);margin-top:2px;font-weight:600;}
+.habit-pts{font-size:10px;color:var(--text3);margin-top:1px;}
+.habit-check{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:var(--bg3);border:1px solid var(--card-border);
+  display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;color:#fff;
+}
+.habit-card.done .habit-check{background:var(--accent);border:none;}
+
+/* SECTION HEADS */
+.section-head{
+  font-size:11px;font-weight:700;color:var(--text3);
+  letter-spacing:2px;text-transform:uppercase;margin:16px 0 10px;
+}
+
+/* WEEK */
+.week-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.week-title{font-size:20px;font-weight:800;font-family:'Syne',sans-serif;}
+.chart-box{background:var(--card);border-radius:var(--radius);padding:16px 14px;border:1px solid var(--card-border);margin-bottom:20px;}
+.bars{display:flex;align-items:flex-end;gap:6px;height:80px;justify-content:space-between;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}
+.bar-val{font-size:9px;color:var(--text3);min-height:12px;}
+.bar{width:100%;border-radius:4px 4px 2px 2px;transition:height .4s ease;min-height:2px;}
+.bar-day{font-size:9px;font-weight:700;color:var(--text3);}
+.bar-day.today{color:var(--accent);}
+.habit-row{margin-bottom:10px;}
+.habit-row-top{display:flex;justify-content:space-between;margin-bottom:4px;}
+.hrn{font-size:12px;color:var(--text2);}
+.hrc{font-size:12px;font-weight:700;color:var(--text3);}
+.hrc.good{color:var(--accent);}
+.prog-bg{background:var(--bg3);border-radius:999px;height:5px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:999px;transition:width .5s ease;}
+
+/* WEIGHT */
+.stat-cards{display:flex;gap:10px;margin-bottom:20px;}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:12px 8px;text-align:center;}
+.stat-card.hi{background:var(--accent-bg);border-color:var(--accent-border);}
+.sc-lbl{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
+.sc-val{font-size:17px;font-weight:900;color:var(--text);margin-top:4px;font-family:'Syne',sans-serif;}
+.stat-card.hi .sc-val{color:var(--accent);}
+.sc-sub{font-size:9px;color:var(--text3);margin-top:2px;}
+.trend-box{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.trend-title{font-size:11px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.log-box{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.log-title{font-size:13px;font-weight:700;margin-bottom:12px;}
+.log-row{display:flex;gap:8px;}
+.log-input{flex:1;background:var(--bg3);border:1px solid var(--accent-border);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-size:14px;outline:none;}
+.btn-save{background:var(--accent);border:none;border-radius:var(--radius-sm);padding:10px 18px;color:#fff;font-weight:800;font-size:13px;}
+.btn-cancel{background:var(--bg3);border:none;border-radius:var(--radius-sm);padding:10px 12px;color:var(--text2);font-size:13px;}
+.btn-add{width:100%;background:var(--accent-bg);border:1px dashed var(--accent-border);border-radius:var(--radius-sm);padding:12px;color:var(--accent);font-weight:700;font-size:13px;}
+.log-hint{font-size:10px;color:var(--text3);margin-top:10px;text-align:center;}
+
+/* PROFILE */
+.profile-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:var(--accent-bg);border:2px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px;}
+.profile-name{font-size:20px;font-weight:800;font-family:'Syne',sans-serif;}
+.profile-meta{font-size:13px;color:var(--text2);margin-top:4px;}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+.ps-item{background:var(--bg3);border-radius:var(--radius-sm);padding:10px;text-align:center;}
+.ps-val{font-size:16px;font-weight:800;color:var(--accent);font-family:'Syne',sans-serif;}
+.ps-lbl{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.5px;text-transform:uppercase;}
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;
+}
+.sr-left{display:flex;align-items:center;gap:12px;}
+.sr-icon{font-size:18px;}
+.sr-label{font-size:14px;font-weight:600;}
+.sr-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.toggle{width:44px;height:24px;border-radius:999px;background:var(--bg3);border:none;position:relative;transition:background .3s;flex-shrink:0;}
+.toggle.on{background:var(--accent);}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.toggle.on::after{transform:translateX(20px);}
+.btn-share{
+  width:100%;background:linear-gradient(135deg,#25d366,#128c7e);
+  border:none;border-radius:var(--radius);padding:14px;
+  color:#fff;font-weight:800;font-size:15px;letter-spacing:.3px;
+  display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;
+}
+.btn-edit-profile{
+  width:100%;background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:13px;color:var(--text2);font-weight:700;font-size:14px;margin-bottom:10px;
+}
+.bmi-card{background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.bmi-title{font-size:11px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.bmi-val{font-size:28px;font-weight:800;color:var(--accent);font-family:'Syne',sans-serif;}
+.bmi-label{font-size:12px;color:var(--text2);margin-top:4px;}
+.bmi-bar-bg{background:var(--bg3);border-radius:999px;height:8px;margin-top:10px;overflow:hidden;}
+.bmi-fill{height:100%;border-radius:999px;}
+
+/* INSTALL BANNER */
+#installBanner{display:none;margin:12px 16px 0;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:var(--radius);padding:12px 14px;align-items:center;gap:10px;}
+#installBanner.show{display:flex;}
+.ib-text{flex:1;font-size:12px;color:var(--text2);font-weight:600;}
+.ib-text strong{color:var(--accent);display:block;font-size:13px;margin-bottom:2px;}
+.btn-ib-install{background:var(--accent);border:none;border-radius:var(--radius-xs);padding:8px 14px;color:#fff;font-weight:800;font-size:12px;white-space:nowrap;}
+.btn-ib-x{background:none;border:none;color:var(--text3);font-size:16px;padding:4px;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:flex-end;}
+.modal-overlay.show{display:flex;}
+.modal-box{
+  background:var(--bg2);border-radius:24px 24px 0 0;
+  padding:24px 20px 40px;width:100%;max-height:90vh;overflow-y:auto;
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:20px;font-family:'Syne',sans-serif;}
+.modal-close{float:right;background:var(--bg3);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;color:var(--text2);}
+
+/* UTILS */
+.divider{height:1px;background:var(--card-border);margin:16px 0;}
+.trend-labels{display:flex;justify-content:space-between;margin-top:6px;}
+.trend-pt{text-align:center;}
+.trend-pt-val{font-size:10px;font-weight:700;color:var(--text2);}
+.trend-pt-date{font-size:8px;color:var(--text3);}
+.empty-state{text-align:center;padding:32px 20px;color:var(--text3);}
+.empty-state .es-icon{font-size:40px;margin-bottom:10px;}
+.empty-state .es-text{font-size:14px;}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div id="onboarding" class="screen active">
+  <!-- Step 1: Welcome + Basic Info -->
+  <div class="ob-step active" id="step1">
+    <div class="ob-step-indicator" id="dots1"></div>
+    <div class="ob-header">
+      <div class="ob-emoji">👋</div>
+      <div class="ob-title">Welcome to FitTrack Pro</div>
+      <div class="ob-sub">Let's personalise your fitness plan. Takes 2 minutes!</div>
+    </div>
+    <div class="field-group"><div class="field-label">Your Full Name</div><input class="field-input" id="ob_name" placeholder="e.g. Rahul Sharma" type="text"/></div>
+    <div class="field-group"><div class="field-label">Age</div><input class="field-input" id="ob_age" placeholder="e.g. 46" type="number" min="10" max="100"/></div>
+    <div class="field-group"><div class="field-label">Gender</div>
+      <div class="chip-group" id="ob_gender">
+        <button class="chip" onclick="selectChip('ob_gender',this,'Male')">👨 Male</button>
+        <button class="chip" onclick="selectChip('ob_gender',this,'Female')">👩 Female</button>
+        <button class="chip" onclick="selectChip('ob_gender',this,'Other')">🧑 Other</button>
+      </div>
+    </div>
+    <div class="ob-nav"><button class="btn-next" onclick="goStep(2)">Continue →</button></div>
+  </div>
+
+  <!-- Step 2: Body Stats -->
+  <div class="ob-step" id="step2">
+    <div class="ob-step-indicator" id="dots2"></div>
+    <div class="ob-header">
+      <div class="ob-emoji">📏</div>
+      <div class="ob-title">Your Body Stats</div>
+      <div class="ob-sub">Used to calculate BMI and personalise your plan</div>
+    </div>
+    <div class="field-group"><div class="field-label">Height (cm)</div><input class="field-input" id="ob_height" placeholder="e.g. 178" type="number" min="100" max="250"/></div>
+    <div class="field-group"><div class="field-label">Current Weight (kg)</div><input class="field-input" id="ob_weight" placeholder="e.g. 76" type="number" min="30" max="250"/></div>
+    <div class="field-group"><div class="field-label">Target Weight (kg)</div><input class="field-input" id="ob_target" placeholder="e.g. 72" type="number" min="30" max="250"/></div>
+    <div class="ob-nav">
+      <button class="btn-back" onclick="goStep(1)">←</button>
+      <button class="btn-next" onclick="goStep(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Profession -->
+  <div class="ob-step" id="step3">
+    <div class="ob-step-indicator" id="dots3"></div>
+    <div class="ob-header">
+      <div class="ob-emoji">💼</div>
+      <div class="ob-title">What do you do?</div>
+      <div class="ob-sub">This helps us suggest the right activities for your lifestyle</div>
+    </div>
+    <div class="field-group">
+      <div class="field-label">Profession</div>
+      <div class="chip-group" id="ob_profession">
+        <button class="chip" onclick="selectChip('ob_profession',this,'IT/Office')">💻 IT / Office</button>
+        <button class="chip" onclick="selectChip('ob_profession',this,'Student')">📚 Student</button>
+        <button class="chip" onclick="selectChip('ob_profession',this,'Homemaker')">🏠 Homemaker</button>
+        <button class="chip" onclick="selectChip('ob_profession',this,'Business')">🏢 Business</button>
+        <button class="chip" onclick="selectChip('ob_profession',this,'Healthcare')">🏥 Healthcare</button>
+        <button class="chip" onclick="selectChip('ob_profession',this,'Teacher')">📖 Teacher</button>
+        <button class="chip" onclick="selectChip('ob_profession',this,'Field Work')">🚗 Field Work</button>
+        <button class="chip" onclick="selectChip('ob_profession',this,'Other')">👤 Other</button>
+      </div>
+    </div>
+    <div class="field-group"><div class="field-label">Work / School Hours</div>
+      <div class="time-row">
+        <div><div class="field-label" style="margin-bottom:6px">Start Time</div><input class="field-input" id="ob_work_start" type="time" value="09:00"/></div>
+        <div><div class="field-label" style="margin-bottom:6px">End Time</div><input class="field-input" id="ob_work_end" type="time" value="18:00"/></div>
+      </div>
+    </div>
+    <div class="field-group"><div class="field-label">Daily Commute (one way)</div>
+      <select class="field-select" id="ob_commute">
+        <option value="0">No commute / Work from home</option>
+        <option value="15">~15 minutes</option>
+        <option value="30">~30 minutes</option>
+        <option value="60">~1 hour</option>
+        <option value="90" selected>~1.5 hours</option>
+        <option value="120">~2 hours</option>
+      </select>
+    </div>
+    <div class="field-group"><div class="field-label">Commute Type</div>
+      <div class="chip-group" id="ob_commute_type">
+        <button class="chip" onclick="selectChip('ob_commute_type',this,'Public Transport')">🚌 Public Transport</button>
+        <button class="chip" onclick="selectChip('ob_commute_type',this,'Own Vehicle')">🚗 Own Vehicle</button>
+        <button class="chip" onclick="selectChip('ob_commute_type',this,'Walking/Cycling')">🚶 Walk/Cycle</button>
+        <button class="chip" onclick="selectChip('ob_commute_type',this,'WFH')">🏠 WFH</button>
+      </div>
+    </div>
+    <div class="ob-nav">
+      <button class="btn-back" onclick="goStep(2)">←</button>
+      <button class="btn-next" onclick="goStep(4)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Fitness Goal -->
+  <div class="ob-step" id="step4">
+    <div class="ob-step-indicator" id="dots4"></div>
+    <div class="ob-header">
+      <div class="ob-emoji">🎯</div>
+      <div class="ob-title">What's your main goal?</div>
+      <div class="ob-sub">We'll build your habits around this</div>
+    </div>
+    <div class="goals-grid" id="ob_goal">
+      <button class="goal-card" onclick="selectGoal(this,'Weight Loss')"><div class="goal-icon">⚖️</div><div class="goal-title">Weight Loss</div><div class="goal-sub">Reduce body weight</div></button>
+      <button class="goal-card" onclick="selectGoal(this,'Tone Up')"><div class="goal-icon">💪</div><div class="goal-title">Tone Up</div><div class="goal-sub">Lean & defined body</div></button>
+      <button class="goal-card" onclick="selectGoal(this,'Weight Gain')"><div class="goal-icon">📈</div><div class="goal-title">Weight Gain</div><div class="goal-sub">Build healthy mass</div></button>
+      <button class="goal-card" onclick="selectGoal(this,'General Fitness')"><div class="goal-icon">🏃</div><div class="goal-title">Stay Fit</div><div class="goal-sub">Overall health</div></button>
+      <button class="goal-card" onclick="selectGoal(this,'Stress Relief')"><div class="goal-icon">🧘</div><div class="goal-title">Stress Relief</div><div class="goal-sub">Mental & physical calm</div></button>
+      <button class="goal-card" onclick="selectGoal(this,'Build Strength')"><div class="goal-icon">🏋️</div><div class="goal-title">Build Strength</div><div class="goal-sub">Get stronger</div></button>
+    </div>
+    <div class="ob-nav">
+      <button class="btn-back" onclick="goStep(3)">←</button>
+      <button class="btn-next" onclick="goStep(5)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Diet & Sleep -->
+  <div class="ob-step" id="step5">
+    <div class="ob-step-indicator" id="dots5"></div>
+    <div class="ob-header">
+      <div class="ob-emoji">🥗</div>
+      <div class="ob-title">Diet & Sleep</div>
+      <div class="ob-sub">A few more details to fine-tune your plan</div>
+    </div>
+    <div class="field-group"><div class="field-label">Diet Type</div>
+      <div class="chip-group" id="ob_diet">
+        <button class="chip" onclick="selectChip('ob_diet',this,'Vegetarian')">🥦 Vegetarian</button>
+        <button class="chip" onclick="selectChip('ob_diet',this,'Non-Vegetarian')">🍗 Non-Veg</button>
+        <button class="chip" onclick="selectChip('ob_diet',this,'Vegan')">🌱 Vegan</button>
+        <button class="chip" onclick="selectChip('ob_diet',this,'Eggetarian')">🥚 Eggetarian</button>
+      </div>
+    </div>
+    <div class="field-group"><div class="field-label">Usual Wake Up Time</div><input class="field-input" id="ob_wake" type="time" value="07:00"/></div>
+    <div class="field-group"><div class="field-label">Usual Sleep Time</div><input class="field-input" id="ob_sleep" type="time" value="23:00"/></div>
+    <div class="field-group"><div class="field-label">Activity Level</div>
+      <div class="chip-group" id="ob_activity">
+        <button class="chip" onclick="selectChip('ob_activity',this,'Sedentary')">🪑 Mostly Sitting</button>
+        <button class="chip" onclick="selectChip('ob_activity',this,'Light')">🚶 Light Movement</button>
+        <button class="chip" onclick="selectChip('ob_activity',this,'Moderate')">🏃 Moderate</button>
+        <button class="chip" onclick="selectChip('ob_activity',this,'Active')">⚡ Very Active</button>
+      </div>
+    </div>
+    <div class="ob-nav">
+      <button class="btn-back" onclick="goStep(4)">←</button>
+      <button class="btn-next" onclick="finishOnboarding()">Build My Plan 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="screen">
+  <div id="appHeader">
+    <div class="app-top">
+      <div>
+        <div class="app-brand">FitTrack Pro</div>
+        <div class="app-user" id="appUserName">Hey there!</div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
+        <div class="streak-pill">
+          <span class="streak-num" id="streakNum">0</span>
+          <span class="streak-lbl">🔥 streak</span>
+        </div>
+      </div>
+    </div>
+    <div class="day-row" id="dayRow"></div>
+  </div>
+
+  <div id="installBanner">
+    <div class="ib-text"><strong>📲 Install FitTrack Pro</strong>Add to home screen</div>
+    <button class="btn-ib-install" id="btnInstall">Install</button>
+    <button class="btn-ib-x" onclick="document.getElementById('installBanner').classList.remove('show')">✕</button>
+  </div>
+
+  <div id="appNav">
+    <button class="nav-btn active" onclick="switchView('today')">📋 Today</button>
+    <button class="nav-btn" onclick="switchView('week')">📊 Week</button>
+    <button class="nav-btn" onclick="switchView('weight')">⚖️ Weight</button>
+    <button class="nav-btn" onclick="switchView('profile')">👤 Me</button>
+  </div>
+
+  <div id="view-today" class="view active">
+    <div class="score-row">
+      <div class="ring-wrap">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="37" fill="none" stroke="var(--bg3)" stroke-width="8"/>
+          <circle id="ringArc" cx="45" cy="45" r="37" fill="none" stroke="var(--accent)" stroke-width="8"
+            stroke-linecap="round" stroke-dasharray="232.5" stroke-dashoffset="232.5"
+            style="transition:stroke-dashoffset .5s ease;"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-pct" id="ringPct">0%</div>
+          <div class="ring-sub">done</div>
+        </div>
+      </div>
+      <div>
+        <div class="day-label" id="activeDayName">Today</div>
+        <div class="day-pts" id="activeDayPts">0 pts</div>
+        <div class="grade-badge" id="gradeBadge">–</div>
+      </div>
+    </div>
+    <div id="habitSections"></div>
+  </div>
+
+  <div id="view-week" class="view">
+    <div class="week-top">
+      <div><div class="week-title">This Week</div><div class="day-pts" id="weekPts">0 pts</div></div>
+      <div class="grade-badge" id="weekGrade" style="font-size:12px;padding:6px 14px;">–</div>
+    </div>
+    <div class="chart-box"><div class="bars" id="barsChart"></div></div>
+    <div class="section-head">Habit Completion</div>
+    <div id="habitBreakdown"></div>
+  </div>
+
+  <div id="view-weight" class="view">
+    <div class="stat-cards" id="statCards"></div>
+    <div id="bmiCard"></div>
+    <div id="trendBox"></div>
+    <div class="log-box">
+      <div class="log-title">Log Today's Weight</div>
+      <div id="weightInputArea"><button class="btn-add" onclick="showWeightInput()">+ Log Weight (kg)</button></div>
+      <div class="log-hint" id="weightHint"></div>
+    </div>
+  </div>
+
+  <div id="view-profile" class="view">
+    <div id="profileCard"></div>
+    <div id="bmiCardProfile"></div>
+    <button class="btn-share" onclick="shareProgress()">
+      <span style="font-size:20px">💬</span> Share Progress on WhatsApp
+    </button>
+    <button class="btn-edit-profile" onclick="showEditProfile()">✏️ Edit Profile</button>
+    <div class="setting-row">
+      <div class="sr-left"><span class="sr-icon">🌙</span><div><div class="sr-label">Dark Mode</div><div class="sr-sub">Easy on the eyes</div></div></div>
+      <button class="toggle" id="themeToggle" onclick="toggleTheme()"></button>
+    </div>
+    <div class="setting-row">
+      <div class="sr-left"><span class="sr-icon">🎯</span><div><div class="sr-label" id="goalDisplay">Goal</div><div class="sr-sub" id="goalSub">Your fitness goal</div></div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-left"><span class="sr-icon">🔄</span><div><div class="sr-label">Reset All Data</div><div class="sr-sub">Start fresh</div></div></div>
+      <button class="toggle" id="resetBtn" onclick="confirmReset()" style="background:var(--danger);width:auto;padding:4px 10px;font-size:11px;font-weight:700;color:#fff;border-radius:6px;height:auto;">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
+    <div class="modal-title">Edit Profile</div>
+    <div id="editModalContent"></div>
+    <button class="btn-next" style="width:100%;margin-top:16px;" onclick="saveEditProfile()">Save Changes</button>
+  </div>
+</div>
+
+<script>
+const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const FULL_DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const SK="fittrackpro_v1";
+let DB=load();
+let activeDay=getTodayIdx();
+const todayIdx=getTodayIdx();
+const weekKey=getWeekKey();
+let deferredPrompt=null;
+
+// ---- STORAGE ----
+function load(){try{const r=localStorage.getItem(SK);return r?JSON.parse(r):{}}catch{return{}}}
+function save(){try{localStorage.setItem(SK,JSON.stringify(DB))}catch{}}
+function getWeekKey(){const n=new Date(),d=n.getDay(),diff=n.getDate()-d+(d===0?-6:1),m=new Date(n);m.setDate(diff);return m.toISOString().slice(0,10);}
+function getTodayIdx(){const d=new Date().getDay();return d===0?6:d-1;}
+function getWeightArr(){if(!DB._weight||!DB._weight.length){return[{date:new Date().toISOString().slice(0,10),val:parseFloat(DB.profile?.weight||70)}];}return DB._weight;}
+function getDayData(i){return DB[weekKey+"_"+i]||{};}
+function getHabits(){return DB._habits||[];}
+function getDayScore(i){const d=getDayData(i),h=getHabits();return h.reduce((s,habit)=>s+(d[habit.id]?habit.points:0),0);}
+function getMaxDaily(){return getHabits().reduce((a,h)=>a+h.points,0)||16;}
+function getWeekTotal(){return DAYS.reduce((s,_,i)=>s+getDayScore(i),0);}
+function getStreak(){let s=0;for(let i=todayIdx;i>=0;i--){if(getDayScore(i)>=getMaxDaily()*.6)s++;else break;}return s;}
+function getGrade(p){if(p>=90)return{label:"Excellent 🔥",color:"#22c55e"};if(p>=70)return{label:"Good 💪",color:"#84cc16"};if(p>=50)return{label:"Okay 👍",color:"#f59e0b"};return{label:"Keep going 💡",color:"#f97316"};}
+function addTime(t,mins){const[h,m]=t.split(":").map(Number);const total=h*60+m+mins;const nh=Math.floor(total/60)%24;const nm=total%60;return`${String(nh).padStart(2,'0')}:${String(nm).padStart(2,'0')}`;}
+function fmtTime(t){if(!t)return"";const[h,m]=t.split(":").map(Number);const ap=h>=12?"PM":"AM";const fh=h%12||12;return`${fh}:${String(m).padStart(2,'0')} ${ap}`;}
+function calcBMI(w,h){return+(w/((h/100)**2)).toFixed(1);}
+function bmiLabel(b){if(b<18.5)return{label:"Underweight",color:"#60a5fa"};if(b<25)return{label:"Healthy",color:"#22c55e"};if(b<30)return{label:"Overweight",color:"#f59e0b"};return{label:"Obese",color:"#f97316"};}
+
+// ---- ONBOARDING ----
+const TOTAL_STEPS=5;
+let chipData={};
+let goalData="";
+
+function renderDots(stepNum){
+  const el=document.getElementById("dots"+stepNum);
+  if(!el)return;
+  el.innerHTML="";
+  for(let i=1;i<=TOTAL_STEPS;i++){
+    const d=document.createElement("div");
+    d.className="ob-dot"+(i<=stepNum?" done":"");
+    el.appendChild(d);
+  }
+}
+for(let i=1;i<=TOTAL_STEPS;i++)renderDots(i);
+
+function selectChip(groupId,el,value){
+  document.querySelectorAll(`#${groupId} .chip`).forEach(c=>c.classList.remove("selected"));
+  el.classList.add("selected");
+  chipData[groupId]=value;
+}
+function selectGoal(el,value){
+  document.querySelectorAll("#ob_goal .goal-card").forEach(c=>c.classList.remove("selected"));
+  el.classList.add("selected");
+  goalData=value;
+}
+function goStep(n){
+  document.querySelectorAll(".ob-step").forEach(s=>s.classList.remove("active"));
+  document.getElementById("step"+n).classList.add("active");
+}
+
+function generateHabits(profile){
+  const wake=profile.wake||"07:00";
+  const workStart=profile.work_start||"09:00";
+  const workEnd=profile.work_end||"18:00";
+  const commute=parseInt(profile.commute||0);
+  const goal=profile.goal||"General Fitness";
+  const profession=profile.profession||"Other";
+  const leaveTime=commute>0?addTime(workStart,-commute):workStart;
+  const returnTime=commute>0?addTime(workEnd,commute):workEnd;
+  const exerciseStart=addTime(wake,15);
+  const exerciseEnd=addTime(exerciseStart,30);
+  const breakfastTime=addTime(exerciseEnd,20);
+  const lunchTime=addTime(workStart,120);
+  const snackTime=addTime(lunchTime,150);
+  const dinnerTime=addTime(returnTime,30);
+  const sleepTime=profile.sleep||"23:00";
+
+  let habits=[];
+  // Morning exercise
+  if(goal==="Weight Loss"||goal==="Tone Up"){
+    habits.push({id:"morning_exercise",label:"Morning Exercise",icon:"🏃",points:3,time:`${fmtTime(exerciseStart)} – ${fmtTime(exerciseEnd)}`,section:"Morning",desc:"Brisk walk or light core workout"});
+  } else if(goal==="Build Strength"){
+    habits.push({id:"morning_exercise",label:"Strength Training",icon:"🏋️",points:3,time:`${fmtTime(exerciseStart)} – ${fmtTime(addTime(exerciseStart,40))}`,section:"Morning",desc:"Bodyweight or gym workout"});
+  } else if(goal==="Stress Relief"){
+    habits.push({id:"morning_exercise",label:"Yoga / Meditation",icon:"🧘",points:3,time:`${fmtTime(exerciseStart)} – ${fmtTime(exerciseEnd)}`,section:"Morning",desc:"Calm your mind and body"});
+  } else {
+    habits.push({id:"morning_exercise",label:"Morning Walk",icon:"🚶",points:3,time:`${fmtTime(exerciseStart)} – ${fmtTime(exerciseEnd)}`,section:"Morning",desc:"Light brisk walk"});
+  }
+  habits.push({id:"breakfast",label:"Healthy Breakfast",icon:"🥣",points:2,time:`${fmtTime(breakfastTime)}`,section:"Morning",desc:"Protein-rich, no sugar"});
+  habits.push({id:"water_morning",label:"2 Glasses Water",icon:"💧",points:1,time:`${fmtTime(wake)} (on waking)`,section:"Morning",desc:"Start hydrated"});
+
+  // Commute habits
+  if(commute>=30){
+    habits.push({id:"commute_walk",label:"Walk Extra Stop",icon:"🚶",points:2,time:`During commute to ${profession==="Student"?"school/college":"office"}`,section:"Commute",desc:"Get off 1-2 stops early"});
+    habits.push({id:"commute_stand",label:"Stand in Transit",icon:"🧍",points:1,time:`${fmtTime(leaveTime)} – ${fmtTime(workStart)} & return`,section:"Commute",desc:"Activates core & legs"});
+    habits.push({id:"commute_stairs",label:"Took Stairs",icon:"🪜",points:1,time:`At ${profession==="Student"?"college":"office"} & station`,section:"Commute",desc:"Skip the elevator"});
+  } else if(commute===0){
+    habits.push({id:"commute_walk",label:"Midday Walk",icon:"🚶",points:2,time:`${fmtTime(addTime(workStart,90))} – ${fmtTime(addTime(workStart,110))}`,section:"Work",desc:"Break from screen"});
+  }
+
+  // Work habits
+  if(profession==="IT/Office"||profession==="Student"||profession==="Teacher"){
+    habits.push({id:"stand_desk",label:"Stand Every Hour",icon:"🏃",points:1,time:`Every 60 min during ${profession==="Student"?"study":"work"}`,section:"Work",desc:"2 min standing break"});
+    habits.push({id:"no_junk",label:"No Junk at Work",icon:"🚫",points:2,time:`During ${fmtTime(workStart)} – ${fmtTime(workEnd)}`,section:"Work",desc:"Avoid canteen junk & biscuits"});
+  } else if(profession==="Homemaker"){
+    habits.push({id:"stand_desk",label:"Active Housework",icon:"🧹",points:2,time:`Morning session`,section:"Work",desc:"Counts as movement!"});
+    habits.push({id:"no_junk",label:"No Snacking",icon:"🚫",points:2,time:`Between meals`,section:"Work",desc:"Avoid idle munching"});
+  } else {
+    habits.push({id:"stand_desk",label:"Move Every Hour",icon:"🏃",points:1,time:`Throughout the day`,section:"Work",desc:"Keep the body active"});
+    habits.push({id:"no_junk",label:"Avoid Junk Food",icon:"🚫",points:2,time:`All day`,section:"Work",desc:"Choose healthy snacks"});
+  }
+
+  habits.push({id:"water_day",label:"3 Litres Water",icon:"💧",points:2,time:`Throughout day`,section:"Work",desc:"500ml every 2 hours"});
+  habits.push({id:"lunch",label:"Healthy Lunch",icon:"🥗",points:2,time:`${fmtTime(lunchTime)}`,section:"Work",desc:"Balanced meal, not at desk"});
+  if(goal!=="Weight Gain"){
+    habits.push({id:"no_sugar",label:"No Sugar / Sweets",icon:"🍬",points:2,time:`All day`,section:"Work",desc:"Cut hidden calories"});
+  } else {
+    habits.push({id:"protein_snack",label:"Protein Snack",icon:"🥜",points:2,time:`${fmtTime(snackTime)}`,section:"Work",desc:"Nuts, eggs or protein shake"});
+  }
+
+  // Evening
+  if(commute>=60){
+    habits.push({id:"eve_commute",label:"Walk on Return Commute",icon:"🚌",points:1,time:`${fmtTime(workEnd)} – ${fmtTime(returnTime)}`,section:"Evening",desc:"Stand & walk extra stop"});
+  }
+  if(goal==="Tone Up"||goal==="Build Strength"){
+    habits.push({id:"eve_exercise",label:"Evening Core / Strength",icon:"💪",points:3,time:`${fmtTime(addTime(returnTime,30))} – ${fmtTime(addTime(returnTime,50))}`,section:"Evening",desc:"20 min focused training"});
+  }
+
+  // Dinner & Sleep
+  const dinnerRule=goal==="Weight Gain"?"Hearty Dinner":"Light Dinner";
+  habits.push({id:"light_dinner",label:dinnerRule,icon:"🍽️",points:3,time:`${fmtTime(dinnerTime)} (before 9 PM)`,section:"Night",desc:goal==="Weight Gain"?"Protein-rich filling meal":"Keep it light, easy to digest"});
+  habits.push({id:"sleep",label:"7–8 Hours Sleep",icon:"😴",points:2,time:`By ${fmtTime(sleepTime)}`,section:"Night",desc:"Non-negotiable for fat loss"});
+
+  return habits;
+}
+
+function finishOnboarding(){
+  const name=document.getElementById("ob_name").value.trim();
+  const age=document.getElementById("ob_age").value;
+  const height=document.getElementById("ob_height").value;
+  const weight=document.getElementById("ob_weight").value;
+  const target=document.getElementById("ob_target").value;
+  const work_start=document.getElementById("ob_work_start").value;
+  const work_end=document.getElementById("ob_work_end").value;
+  const commute=document.getElementById("ob_commute").value;
+  const wake=document.getElementById("ob_wake").value;
+  const sleep=document.getElementById("ob_sleep").value;
+
+  if(!name||!age||!height||!weight||!target){alert("Please fill in all fields!");return;}
+
+  const profile={
+    name,age,height,weight,target,work_start,work_end,commute,wake,sleep,
+    gender:chipData["ob_gender"]||"Other",
+    profession:chipData["ob_profession"]||"Other",
+    commute_type:chipData["ob_commute_type"]||"Public Transport",
+    diet:chipData["ob_diet"]||"Vegetarian",
+    activity:chipData["ob_activity"]||"Sedentary",
+    goal:goalData||"General Fitness",
+  };
+
+  DB.profile=profile;
+  DB._habits=generateHabits(profile);
+  DB._weight=[{date:new Date().toISOString().slice(0,10),val:parseFloat(weight)}];
+  DB._theme=DB._theme||"dark";
+  save();
+  launchApp();
+}
+
+// ---- APP ----
+function launchApp(){
+  document.getElementById("onboarding").classList.remove("active");
+  document.getElementById("app").classList.add("active");
+  const p=DB.profile;
+  document.getElementById("appUserName").textContent="Hey, "+p.name.split(" ")[0]+"!";
+  const theme=DB._theme||"dark";
+  document.documentElement.setAttribute("data-theme",theme);
+  updateThemeUI(theme);
+  renderAll();
+}
+
+function renderDayRow(){
+  const row=document.getElementById("dayRow");row.innerHTML="";
+  DAYS.forEach((d,i)=>{
+    const s=getDayScore(i),p=Math.round((s/getMaxDaily())*100);
+    const btn=document.createElement("button");
+    btn.className="day-pill"+(i===todayIdx?" today":"")+(i===activeDay?" active":"")+(s>0?" has-data":"");
+    btn.innerHTML=`<div class="dp-name">${d}</div><div class="dp-pct">${s>0?p+"%":"-"}</div>`;
+    btn.onclick=()=>{activeDay=i;switchView("today");};
+    row.appendChild(btn);
+  });
+}
+
+function renderToday(){
+  const score=getDayScore(activeDay),max=getMaxDaily(),pct=Math.round((score/max)*100);
+  const circ=2*Math.PI*37,offset=circ-(circ*pct/100);
+  document.getElementById("ringArc").setAttribute("stroke-dashoffset",offset);
+  document.getElementById("ringPct").textContent=pct+"%";
+  document.getElementById("activeDayName").textContent=FULL_DAYS[activeDay];
+  document.getElementById("activeDayPts").textContent=score+" / "+max+" pts";
+  const g=getGrade(pct),badge=document.getElementById("gradeBadge");
+  badge.textContent=g.label;badge.style.background=g.color+"22";badge.style.border="1px solid "+g.color+"55";badge.style.color=g.color;
+
+  const habits=getHabits();
+  const dayD=getDayData(activeDay);
+  const sections={};
+  habits.forEach(h=>{
+    if(!sections[h.section])sections[h.section]=[];
+    sections[h.section].push(h);
+  });
+
+  const container=document.getElementById("habitSections");container.innerHTML="";
+  Object.entries(sections).forEach(([sec,items])=>{
+    const sh=document.createElement("div");sh.className="section-head";sh.textContent=sec;container.appendChild(sh);
+    const list=document.createElement("div");list.className="habits";
+    items.forEach(h=>{
+      const done=!!dayD[h.id];
+      const btn=document.createElement("button");
+      btn.className="habit-card"+(done?" done":"");
+      btn.innerHTML=`
+        <div class="habit-left">
+          <span class="habit-icon">${h.icon}</span>
+          <div class="habit-info">
+            <div class="habit-name">${h.label}</div>
+            <div class="habit-time">⏰ ${h.time}</div>
+            <div class="habit-pts">+${h.points} pts · ${h.desc}</div>
+          </div>
+        </div>
+        <div class="habit-check">${done?"✓":""}</div>`;
+      btn.onclick=()=>toggleHabit(activeDay,h.id);
+      list.appendChild(btn);
+    });
+    container.appendChild(list);
+  });
+}
+
+function renderWeek(){
+  const wT=getWeekTotal(),wM=getMaxDaily()*7,wP=Math.round((wT/wM)*100);
+  document.getElementById("weekPts").textContent=wT+" / "+wM+" pts";
+  const wg=getGrade(wP),wG=document.getElementById("weekGrade");
+  wG.textContent=wP+"% – "+wg.label;wG.style.background=wg.color+"22";wG.style.border="1px solid "+wg.color+"55";wG.style.color=wg.color;
+
+  const chart=document.getElementById("barsChart");chart.innerHTML="";
+  DAYS.forEach((d,i)=>{
+    const s=getDayScore(i),p=(s/getMaxDaily())*100,isT=i===todayIdx;
+    const col=document.createElement("div");col.className="bar-col";
+    col.onclick=()=>{activeDay=i;switchView("today");};
+    col.innerHTML=`<div class="bar-val">${s>0?s:""}</div><div class="bar" style="height:${Math.max(p*.65,p>0?6:2)}px;background:${isT?"var(--accent)":p>60?"#34d399":p>0?"#0d9488":"var(--bg3)"};"></div><div class="bar-day${isT?" today":""}">${d}</div>`;
+    chart.appendChild(col);
+  });
+
+  const bd=document.getElementById("habitBreakdown");bd.innerHTML="";
+  getHabits().forEach(h=>{
+    const count=DAYS.reduce((s,_,i)=>s+(getDayData(i)[h.id]?1:0),0),p=Math.round((count/7)*100);
+    const div=document.createElement("div");div.className="habit-row";
+    div.innerHTML=`<div class="habit-row-top"><div class="hrn">${h.icon} ${h.label}</div><div class="hrc${p>=70?" good":""}">${count}/7</div></div><div class="prog-bg"><div class="prog-fill" style="width:${p}%;background:${p>=70?"var(--accent)":p>=40?"var(--warn)":"var(--bg3)"};"></div></div>`;
+    bd.appendChild(div);
+  });
+}
+
+function renderWeight(){
+  const p=DB.profile||{};
+  const wA=getWeightArr();
+  const sW=wA[0].val,cW=wA[wA.length-1].val,tW=parseFloat(p.target||sW);
+  const lost=+(sW-cW).toFixed(1);
+  const toGo=+(cW-tW).toFixed(1);
+
+  document.getElementById("statCards").innerHTML=`
+    <div class="stat-card"><div class="sc-lbl">Start</div><div class="sc-val">${sW}kg</div><div class="sc-sub">baseline</div></div>
+    <div class="stat-card hi"><div class="sc-lbl">Now</div><div class="sc-val">${cW}kg</div><div class="sc-sub">current</div></div>
+    <div class="stat-card"><div class="sc-lbl">Target</div><div class="sc-val" style="color:var(--accent)">${tW}kg</div><div class="sc-sub">${Math.abs(toGo)}kg to go</div></div>`;
+
+  if(p.height&&cW){
+    const bmi=calcBMI(cW,parseFloat(p.height));
+    const bl=bmiLabel(bmi);
+    const bmiPct=Math.min(100,Math.max(0,((bmi-15)/25)*100));
+    document.getElementById("bmiCard").innerHTML=`
+      <div class="bmi-card" style="margin-bottom:16px;">
+        <div class="bmi-title">BMI Index</div>
+        <div class="bmi-val" style="color:${bl.color}">${bmi}</div>
+        <div class="bmi-label" style="color:${bl.color};font-weight:700;">${bl.label}</div>
+        <div class="bmi-bar-bg"><div class="bmi-fill" style="width:${bmiPct}%;background:${bl.color};"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--text3);">
+          <span>15 – Under</span><span>18.5 – Normal</span><span>25 – Over</span><span>30+</span>
+        </div>
+      </div>`;
+  }
+
+  if(wA.length>1){
+    const vals=wA.map(w=>w.val),mn=Math.min(...vals)-1,mx=Math.max(...vals)+1,W=300,H=70;
+    const pts=wA.map((w,i)=>((i/(wA.length-1))*(W-20)+10)+","+(H-((w.val-mn)/(mx-mn))*(H-10)-5)).join(" ");
+    const dots=wA.map((w,i)=>`<circle cx="${(i/(wA.length-1))*(W-20)+10}" cy="${H-((w.val-mn)/(mx-mn))*(H-10)-5}" r="3.5" fill="var(--accent)"/>`).join("");
+    document.getElementById("trendBox").innerHTML=`
+      <div class="trend-box">
+        <div class="trend-title">Weight Trend</div>
+        <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+          <polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          ${dots}
+        </svg>
+        <div class="trend-labels">${wA.map(w=>`<div class="trend-pt"><div class="trend-pt-val">${w.val}</div><div class="trend-pt-date">${w.date.slice(5)}</div></div>`).join("")}</div>
+      </div>`;
+  } else document.getElementById("trendBox").innerHTML="";
+
+  const hint=document.getElementById("weightHint");
+  hint.textContent=lost>0?`${lost}kg lost so far 🎯 · ${Math.abs(toGo)}kg to target`:lost<0?`${Math.abs(lost)}kg gained · Target: ${tW}kg`:"Log your weight regularly to track progress";
+}
+
+function renderProfile(){
+  const p=DB.profile||{};
+  const wA=getWeightArr();
+  const cW=wA[wA.length-1].val;
+  const bmi=p.height?calcBMI(cW,parseFloat(p.height)):null;
+  const totalDays=Object.keys(DB).filter(k=>k.startsWith(weekKey+"_")).length;
+
+  document.getElementById("profileCard").innerHTML=`
+    <div class="profile-card">
+      <div class="profile-avatar">${p.gender==="Female"?"👩":p.gender==="Male"?"👨":"🧑"}</div>
+      <div class="profile-name">${p.name||"User"}</div>
+      <div class="profile-meta">${p.age} yrs · ${p.gender} · ${p.profession}</div>
+      <div class="profile-meta" style="margin-top:4px">Goal: <strong style="color:var(--accent)">${p.goal||"–"}</strong></div>
+      <div class="profile-meta">Diet: ${p.diet||"–"} · Activity: ${p.activity||"–"}</div>
+      <div class="profile-stats">
+        <div class="ps-item"><div class="ps-val">${cW}kg</div><div class="ps-lbl">Weight</div></div>
+        <div class="ps-item"><div class="ps-val">${bmi||"–"}</div><div class="ps-lbl">BMI</div></div>
+        <div class="ps-item"><div class="ps-val">${getStreak()}</div><div class="ps-lbl">Streak</div></div>
+      </div>
+    </div>`;
+
+  document.getElementById("goalDisplay").textContent=p.goal||"Goal";
+  document.getElementById("goalSub").textContent=`Target: ${p.target}kg · From ${p.weight}kg`;
+
+  const theme=DB._theme||"dark";
+  const tt=document.getElementById("themeToggle");
+  if(tt){tt.className="toggle"+(theme==="dark"?" on":"");}
+}
+
+function renderAll(){
+  renderDayRow();
+  renderToday();
+  renderWeek();
+  renderWeight();
+  renderProfile();
+  document.getElementById("streakNum").textContent=getStreak();
+}
+
+function toggleHabit(dayIdx,habitId){
+  const key=weekKey+"_"+dayIdx;
+  if(!DB[key])DB[key]={};
+  DB[key][habitId]=!DB[key][habitId];
+  save();renderAll();
+}
+
+function switchView(v){
+  document.querySelectorAll(".view").forEach(el=>el.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(el=>el.classList.remove("active"));
+  document.getElementById("view-"+v).classList.add("active");
+  const idx=["today","week","weight","profile"].indexOf(v);
+  if(idx>=0)document.querySelectorAll(".nav-btn")[idx].classList.add("active");
+  renderAll();
+}
+
+function showWeightInput(){
+  document.getElementById("weightInputArea").innerHTML=`
+    <div class="log-row">
+      <input class="log-input" type="number" id="wInput" placeholder="e.g. 75.5" step="0.1" min="30" max="250" inputmode="decimal"/>
+      <button class="btn-save" onclick="saveWeight()">Save</button>
+      <button class="btn-cancel" onclick="cancelWeight()">✕</button>
+    </div>`;
+  setTimeout(()=>{const el=document.getElementById("wInput");if(el)el.focus();},100);
+}
+function cancelWeight(){document.getElementById("weightInputArea").innerHTML=`<button class="btn-add" onclick="showWeightInput()">+ Log Weight (kg)</button>`;}
+function saveWeight(){
+  const val=parseFloat(document.getElementById("wInput").value);
+  if(!val||val<30||val>250){alert("Please enter a valid weight.");return;}
+  const today=new Date().toISOString().slice(0,10);
+  let wA=getWeightArr().filter(w=>w.date!==today);
+  wA.push({date:today,val});wA.sort((a,b)=>a.date.localeCompare(b.date));
+  DB._weight=wA;save();cancelWeight();renderWeight();
+}
+
+// ---- THEME ----
+function toggleTheme(){
+  const current=DB._theme||"dark";
+  const next=current==="dark"?"light":"dark";
+  DB._theme=next;save();
+  document.documentElement.setAttribute("data-theme",next);
+  updateThemeUI(next);
+}
+function updateThemeUI(theme){
+  const btn=document.getElementById("themeBtn");
+  if(btn)btn.textContent=theme==="dark"?"☀️":"🌙";
+  const tt=document.getElementById("themeToggle");
+  if(tt)tt.className="toggle"+(theme==="dark"?" on":"");
+  document.querySelector('meta[name="theme-color"]').setAttribute("content",theme==="dark"?"#0f172a":"#f0fdf4");
+}
+
+// ---- SHARE ----
+function shareProgress(){
+  const p=DB.profile||{};
+  const wA=getWeightArr();
+  const cW=wA[wA.length-1].val;
+  const sW=parseFloat(p.weight||cW);
+  const lost=+(sW-cW).toFixed(1);
+  const streak=getStreak();
+  const weekPct=Math.round((getWeekTotal()/(getMaxDaily()*7))*100);
+  const today=getDayScore(todayIdx);
+  const todayPct=Math.round((today/getMaxDaily())*100);
+
+  const msg=`🏃 *FitTrack Pro – My Progress Update*
+
+👤 *${p.name}* | ${p.age} yrs | Goal: ${p.goal}
+
+📊 *This Week:* ${weekPct}% habits completed
+📅 *Today:* ${todayPct}% (${today}/${getMaxDaily()} pts)
+🔥 *Streak:* ${streak} day${streak!==1?"s":""}
+⚖️ *Weight:* ${cW}kg ${lost>0?"(Lost "+lost+"kg 🎉)":lost<0?"(Gained "+Math.abs(lost)+"kg)":"(Started today)"}
+🎯 *Target:* ${p.target}kg
+
+Tracked with FitTrack Pro 💪`;
+
+  const url="https://wa.me/?text="+encodeURIComponent(msg);
+  window.open(url,"_blank");
+}
+
+// ---- EDIT PROFILE ----
+function showEditProfile(){
+  const p=DB.profile||{};
+  document.getElementById("editModalContent").innerHTML=`
+    <div class="field-group"><div class="field-label">Name</div><input class="field-input" id="ep_name" value="${p.name||""}"/></div>
+    <div class="field-group"><div class="field-label">Age</div><input class="field-input" id="ep_age" type="number" value="${p.age||""}"/></div>
+    <div class="field-group"><div class="field-label">Height (cm)</div><input class="field-input" id="ep_height" type="number" value="${p.height||""}"/></div>
+    <div class="field-group"><div class="field-label">Current Weight (kg)</div><input class="field-input" id="ep_weight" type="number" value="${p.weight||""}"/></div>
+    <div class="field-group"><div class="field-label">Target Weight (kg)</div><input class="field-input" id="ep_target" type="number" value="${p.target||""}"/></div>
+    <div class="field-group"><div class="field-label">Work Start Time</div><input class="field-input" id="ep_work_start" type="time" value="${p.work_start||"09:00"}"/></div>
+    <div class="field-group"><div class="field-label">Work End Time</div><input class="field-input" id="ep_work_end" type="time" value="${p.work_end||"18:00"}"/></div>
+    <div class="field-group"><div class="field-label">Goal</div>
+      <select class="field-select" id="ep_goal">
+        ${["Weight Loss","Tone Up","Weight Gain","General Fitness","Stress Relief","Build Strength"].map(g=>`<option value="${g}"${p.goal===g?" selected":""}>${g}</option>`).join("")}
+      </select>
+    </div>`;
+  document.getElementById("editModal").classList.add("show");
+}
+function closeEditModal(){document.getElementById("editModal").classList.remove("show");}
+function saveEditProfile(){
+  const p=DB.profile||{};
+  p.name=document.getElementById("ep_name").value||p.name;
+  p.age=document.getElementById("ep_age").value||p.age;
+  p.height=document.getElementById("ep_height").value||p.height;
+  p.weight=document.getElementById("ep_weight").value||p.weight;
+  p.target=document.getElementById("ep_target").value||p.target;
+  p.work_start=document.getElementById("ep_work_start").value||p.work_start;
+  p.work_end=document.getElementById("ep_work_end").value||p.work_end;
+  p.goal=document.getElementById("ep_goal").value||p.goal;
+  DB.profile=p;
+  DB._habits=generateHabits(p);
+  save();
+  closeEditModal();
+  document.getElementById("appUserName").textContent="Hey, "+p.name.split(" ")[0]+"!";
+  renderAll();
+}
+
+function confirmReset(){
+  if(confirm("This will delete all your data and restart setup. Are you sure?")){
+    localStorage.removeItem(SK);
+    location.reload();
+  }
+}
+
+// ---- PWA ----
+const manifest={name:"FitTrack Pro",short_name:"FitTrack",display:"standalone",background_color:"#0f172a",theme_color:"#0f172a",start_url:".",orientation:"portrait",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230f172a'/%3E%3Ctext x='96' y='130' font-size='110' text-anchor='middle'%3E🏃%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"},{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f172a'/%3E%3Ctext x='256' y='360' font-size='300' text-anchor='middle'%3E🏃%3C/text%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml"}]};
+const blob=new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});
+document.getElementById("manifestLink").href=URL.createObjectURL(blob);
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBanner").classList.add("show");});
+document.getElementById("btnInstall").addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBanner").classList.remove("show");});
+if("serviceWorker" in navigator){const swBlob=new Blob([`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(clients.claim()));self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('offline'))));`],{type:"application/javascript"});navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});}
+
+// ---- INIT ----
+if(DB.profile&&DB._habits){
+  launchApp();
+} else {
+  document.getElementById("onboarding").classList.add("active");
+}
+</script>
+</body>
+</html>
